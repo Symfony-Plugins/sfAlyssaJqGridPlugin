@@ -17,14 +17,11 @@
  */
 class sfGridAlyssaJqGrid extends sfContextGridJavaScript
 {
-  /**
-   * the name of the AlyssaJqGrid-components
-   *
-   * @var string
-   */
-  protected $name;
 
-  protected $rowActions = null;
+  /**
+   * @var array The sfWidgetGird instances that will be actions for the grid.
+   */
+  protected $rowActions = array();
 
   /**
    * Constructor.
@@ -35,41 +32,24 @@ class sfGridAlyssaJqGrid extends sfContextGridJavaScript
    *                       If an array is given, the array must conform to the
    *                       requirements of the constructor of sfDataSourceArray.
    */
-  public function __construct($name, $source)
+  public function __construct($source, $options = array())
   {
-    parent::__construct($source);
-    //FALTA: cambiar esto a opciones de una grilla.
-    $this->name = $name;
+    parent::__construct($source, $options);
   }
 
   /**
    * Configures the grid. This method is called from the constructor. It can
    * be overridden in child classes to configure the grid.
    */
-  public function configure()
+  public function configure($options = array())
   {
-    parent::configure();
-
-    // get the source from the original pager
-    //$source = $this->getPager()->getDataSource();
-    // redefine the pager
-    //    $this->pager = new sfDataSourcePagerAlyssa($source);
+    parent::configure($options);
 
     // define the javascript formatter
     $this->setJavaScriptFormatter(new sfGridFormatterAlyssaJqGrid($this));
 
     // define the json formatter for Alyssa
     $this->setDataFormatter(new sfGridFormatterJsonAlyssaJqGrid($this));
-  }
-
-  /**
-   * returns the name of the sfAlyssaJqGrid-components
-   *
-   * @return string
-   */
-  public function getName()
-  {
-    return $this->name;
   }
 
   /**
@@ -82,22 +62,93 @@ class sfGridAlyssaJqGrid extends sfContextGridJavaScript
     return new sfWidgetAlyssaJqGrid();
   }
 
+  /**
+   * Sets a list of widgets that should be used to render actions in the column
+   * actions. The widgets should be given as associative array with the column
+   * names as keys and instances of sfWidget as values.
+   *
+   * <code>
+   * $grid->setRowActions(array(
+   *     "load" => new sfWidgetAlyssaJqGridLink(array(
+   *         'action'     => 'module/load',
+   *         'key_column' => 'identifier',
+   *         'label'      => 'Load',
+   *         'icon'       => 'ui-icon-document')),
+   *     "delete" => new sfWidgetAlyssaJqGridLink(array(
+   *         'action'     => 'module/delete',
+   *         'key_column' => 'identifier',
+   *         'label'      => 'Delete',
+   *         'icon'       => 'ui-icon-trash')),
+   * ));
+   * </code>
+   *
+   * Columns for which you do not specify a widget will not be modified. Per
+   * default all columns are rendered with sfWidgetText.
+   *
+   * @param array $widgets   An associative array of column names and widgets
+   * @throws LogicException  Throws an exception if any of the given column
+   *                         names has not been configured with setColumns()
+   */
   public function setRowActions($actions){
     foreach ($actions as $key => $action)
     {
-      //TODO: make validations?
-      $action->setGrid($this);
-      $actions[$key] = $action;
+      $this->setRowAction($key, $action);
     }
-
-    $this->rowActions = $actions;
   }
 
-  public function getRowActions(){
+  /**
+   * Sets the widget used to render values in the actions column.
+   *
+   * <code>
+   * $grid->setRowAction(
+   *     "load" => new sfWidgetAlyssaJqGridLink(array(
+   *         'action'     => 'module/load',
+   *         'key_column' => 'identifier',
+   *         'label'      => 'Load',
+   *         'icon'       => 'ui-icon-document'))
+   * ));
+   * </code>
+   *
+   * @param  string $column   The name of the column
+   * @param  sfWidget $widget The widget used to render values in this column
+   * @throws LogicException   Throws an exception if the given column
+   *                          name has not been configured with setColumns()
+   */
+  public function setRowAction($key, $action)
+  {
+
+    if (in_array($key, $this->rowActions))
+    {
+      throw new LogicException(sprintf('The key "%s" is alredy in use', $column));
+    }
+
+    if (!($action instanceof sfWidgetGrid))
+    {
+      throw new InvalidArgumentException('The given widget must be an instance of sfWidgetGrid class.');
+    }
+
+    $action->setGrid($this);
+
+    $this->rowActions[$key] = $action;
+  }
+
+  /**
+   * Returns the actions widget
+   *
+   * @return array action widgets present in the grid
+   */
+  public function getRowActions()
+  {
     return $this->rowActions;
   }
 
-  public function hasRowActions(){
+  /**
+   * Returns whether the grid has widgets setted in the actions column.
+   *
+   * @return boolean return true if are widgets
+   */
+  public function hasRowActions()
+  {
     return count($this->getRowActions()) > 0;
   }
 

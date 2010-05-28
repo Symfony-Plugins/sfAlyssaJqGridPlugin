@@ -9,6 +9,14 @@
 /**
  * sfWidgetAlyssaJqGridLink
  *
+ * <code>
+ *     new sfWidgetAlyssaJqGridLink(array(
+ *         'action'     => 'module/load',
+ *         'key_column' => 'identifier',
+ *         'label'      => 'Load',
+ *         'icon'       => 'ui-icon-document'))
+ * </code>
+ *
  * @package    lib
  * @subpackage widget
  * @author     Sergio Fabian Vier <sergio.vier@alyssa-it.com>
@@ -88,7 +96,7 @@ class sfWidgetAlyssaJqGridLink extends sfWidgetGridLink
   public function getColumnConfig($name)
   {
     $arrJs = array(
-      //'name'      => $this->getOption('column_config.name'),
+    //'name'      => $this->getOption('column_config.name'),
       'width'     => $this->getOption('column_config.width'),
       'sortable'  => $this->getOption('column_config.sortable'),
       'align'     => $this->getOption('column_config.align'),
