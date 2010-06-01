@@ -17,20 +17,6 @@
 class sfGridFormatterJsonAlyssaJqGridRow extends sfGridFormatterDynamicRow
 {
 
-  protected $templateActions  = <<<EOF2
-<ul class="sf_admin_td_actions fg-buttonset fg-buttonset-single">
-  %action%
-</ul>
-EOF2;
-
-
-  protected $templateAction = <<<EOF
-<li class="sf_admin_action_show">
-  %link%
-</li>
-EOF;
-
-
   /**
    * Renders a row to an array
    *
@@ -60,14 +46,26 @@ EOF;
 
   protected function renderActions()
   {
+    $templateActions = <<<EOF2
+<ul class="sf_admin_td_actions fg-buttonset fg-buttonset-single">
+  %action%
+</ul>
+EOF2;
+
+    $templateAction = <<<EOF
+<li class="sf_admin_action_show">
+  %link%
+</li>
+EOF;
+
     $source = $this->grid->getDataSource();
     $actions = '';
     foreach ($this->grid->getRowActions() as $action){
-      $actions .= strtr($this->templateAction, array('%link%' => $action->render($action->getKeyColumn(), $source[$action->getKeyColumn()])));
+      $actions .= strtr($templateAction, array('%link%' => $action->render($action->getKeyColumn(), $source[$action->getKeyColumn()])));
 
     }
 
-    return strtr($this->templateActions, array('%action%' => $actions));
+    return strtr($templateActions, array('%action%' => $actions));
   }
 
 }
