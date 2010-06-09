@@ -38,12 +38,31 @@ class sfGridAlyssaJqGrid extends sfContextGridJavaScript
   }
 
   /**
-   * Configures the grid. This method is called from the constructor. It can
-   * be overridden in child classes to configure the grid.
+   * Configures the grid. This method is called from the constructor.
+   *
+   * @param array $options an array with options like 'jqgrid.some' that can take
+   *                        only this values:
+   *                            - jqgrid.multiselect
+   *                            - jqgrid.autoWidth
+   *                            - jqgrid.height
+   *                            - jqgrid.rowList
+   *                            - jqgrid.viewrecords
+   *                            -
+   *
+   * See an explanation in http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
    */
   public function configure($options = array())
   {
     parent::configure($options);
+
+    // configure options for sfAlyssaJqGrid from jqGrid
+
+    $this->addOption('jqgrid.viewrecords', true);
+    $this->addOption('jqgrid.sortable', false);
+    $this->addOption('jqgrid.multiselect', false);
+    $this->addOption('jqgrid.autoWidth', false);
+    $this->addOption('jqgrid.height', 'auto');
+    $this->addOption('jqgrid.rowList', array(10,20,30,50));
 
     // define the javascript formatter
     $this->setJavaScriptFormatter(new sfGridFormatterAlyssaJqGrid($this));

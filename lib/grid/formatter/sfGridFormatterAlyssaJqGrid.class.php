@@ -18,6 +18,12 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
 {
   /**
    *
+   * @var sfGridAlyssaJqGrid
+   */
+  protected $grid = null;
+
+  /**
+   *
    * @param sfGridAlyssaJqGrid $grid
    */
   public function __construct(sfGridAlyssaJqGrid $grid)
@@ -25,8 +31,8 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
     // grid setup
     $this->grid = $grid;
     $this->row = new sfGridFormatterAlyssaJqGridRow($grid, 0);
-  }
 
+  }
 
   public function getColumnNamesConfig()
   {
@@ -93,8 +99,14 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
 <script type="text/javascript">
 jQuery("#grid").jqGrid(%grid%);
 jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
+jQuery(document).ready(function(){
+    jQuery("#grid").setGridWidth(screen.width-300);
+});
 </script>
 EOF;
+
+    $sortName  = $this->grid->getSortColumn() ? $this->grid->getSortColumn() : '';
+    $sortOrder = $this->grid->getSortOrder() ? $this->grid->getSortOrder() : 'asc';
 
     $grid = json_encode(array(
               'url'         => $url,
@@ -102,14 +114,17 @@ EOF;
               'colNames'    => $this->getColumnNamesConfig(),
               'colModel'    => $this->getColumnModelConfig(),
               'rowNum'      => $this->grid->getPager()->getMaxPerPage(),
-              'rowList'     => array(10,20,30),
+              'rowList'     => $this->grid->getOption('jqgrid.rowList'),
               'pager'       => '#pager',
-              //'sortname'    => 'identifier',
               'gridview'    => true,              //remember, this option disabe subgrid and treeview features
-              'viewrecords' => true,
-              'sortorder'   => 'desc',
-              'autowidth'   => true,
-              'multiselect' => true,
+              'viewrecords' => $this->grid->getOption('jqgrid.viewrecords'),
+              'sortname'    => $sortName,
+              'sortorder'   => $sortOrder,
+              'forceFit'    => true,
+              'sortable'    => $this->grid->getOption('jqgrid.sortable'),
+              'height'      => $this->grid->getOption('jqgrid.height'),
+              'autoWidth'   => $this->grid->getOption('jqgrid.autoWidth'),
+              'multiselect' => $this->grid->getOption('jqgrid.multiselect'),
               'caption'     => $this->grid->getTitle(),
     ));
 
