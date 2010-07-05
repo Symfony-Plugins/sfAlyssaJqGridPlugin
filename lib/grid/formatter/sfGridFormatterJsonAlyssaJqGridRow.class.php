@@ -58,10 +58,10 @@ EOF2;
 </li>
 EOF;
 
-    $source = $this->grid->getDataSource();
+    //$source = $this->grid->getDataSource();
     $actions = '';
-    foreach ($this->grid->getRowActions() as $action){
-      $actions .= strtr($templateAction, array('%link%' => $action->render($action->getKeyColumn(), $source[$action->getKeyColumn()])));
+    foreach ($this->grid->getRowActions() as $k => $action){
+      $actions .= strtr($templateAction, array('%link%' => $action->render($k)));
 
     }
 
