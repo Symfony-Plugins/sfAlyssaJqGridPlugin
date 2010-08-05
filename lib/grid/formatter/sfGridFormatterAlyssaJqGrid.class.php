@@ -67,7 +67,7 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
     {
       $columnConfig             = $widget->getColumnConfig($column);
       $columnConfig['name']     = $this->grid->getTitleForColumn($column);
-      $columnConfig['index']    = $this->grid->getTitleForColumn($column);
+      $columnConfig['index']    = $column;
       $columnConfig['sortable'] = in_array($column, $sortable);
 
       $columnModelConfig[] = $columnConfig;

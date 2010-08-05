@@ -53,9 +53,14 @@ class sfGridAlyssaJqGridRoute extends sfGridRoute
     $getParameters = $request->getGetParameters();
 
     // translate params
-    if (isset($getParameters['page']))      $parameters['page'] = $getParameters['page'];
-    if (isset($getParameters['sortname']))  $parameters['sort'] = $getParameters['sortname'];
-    if (isset($getParameters['sortorder'])) $parameters['type'] = $getParameters['sortorder'];
+    if (isset($getParameters['page']))  $parameters['page'] = $getParameters['page'];
+    // if doesn't have setted a value (clicked a column to define order)
+    if (isset($getParameters['sidx']) && $getParameters['sidx'] != '')
+    {
+      $parameters['sort'] = $getParameters['sidx'];
+      if (isset($getParameters['sord']))  $parameters['type'] = $getParameters['sord'];
+    }
+
 
     return parent::getObjectForParameters($parameters);
   }
