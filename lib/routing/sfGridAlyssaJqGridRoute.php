@@ -52,15 +52,18 @@ class sfGridAlyssaJqGridRoute extends sfGridRoute
     $request = sfContext::getInstance()->getRequest();
     $getParameters = $request->getGetParameters();
 
-    // translate params
+    // we need to set page only when there isn't a "max per page" value to set!
     if (isset($getParameters['page']))  $parameters['page'] = $getParameters['page'];
-    // if doesn't have setted a value (clicked a column to define order)
+
+    // if has set up a value (clicked a column to define order)
     if (isset($getParameters['sidx']) && $getParameters['sidx'] != '')
     {
       $parameters['sort'] = $getParameters['sidx'];
+
       if (isset($getParameters['sord']))  $parameters['type'] = $getParameters['sord'];
     }
 
+    if (isset($getParameters['rows']))  $parameters['rows'] = $getParameters['rows'];
 
     return parent::getObjectForParameters($parameters);
   }
