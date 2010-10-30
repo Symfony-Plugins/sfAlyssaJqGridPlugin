@@ -24,8 +24,7 @@ class sfGridFormatterJsonAlyssaJqGridRow extends sfGridFormatterDynamicRow
    */
   public function render()
   {
-    $source = $this->grid->getDataSource();
-    $source->seek($this->index);
+    $this->grid->getDataSource()->seek($this->index);
 
     $arrData = array();
 
@@ -35,7 +34,9 @@ class sfGridFormatterJsonAlyssaJqGridRow extends sfGridFormatterDynamicRow
 
     foreach ($widgets as $column => $widget)
     {
-      $arrData['cell'][] = $widget->render($column, $source[$column]);
+      $data = $this->grid->getDataForColumn($column);
+
+      $arrData['cell'][] = $widget->render($column, $data);
     }
 
     if ($this->grid->hasRowActions()){
@@ -58,7 +59,6 @@ EOF2;
 </li>
 EOF;
 
-    //$source = $this->grid->getDataSource();
     $actions = '';
     foreach ($this->grid->getRowActions() as $k => $action){
       $actions .= strtr($templateAction, array('%link%' => $action->render($k)));
