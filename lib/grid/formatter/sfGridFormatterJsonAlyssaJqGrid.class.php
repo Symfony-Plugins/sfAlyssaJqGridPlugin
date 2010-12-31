@@ -36,7 +36,7 @@ class sfGridFormatterJsonAlyssaJqGrid extends sfGridFormatterDynamic
   {
     $arrJson = array();
 
-    $arrJson['total'] = $this->grid->getPager()->getRecordCount();
+    $arrJson['total'] = $this->grid->getPager()->getPageCount();
     $arrJson['page']  = $this->grid->getPager()->getPage();
     $arrJson['rows']  = $this->getData();
 
