@@ -48,7 +48,6 @@ class sfWidgetAlyssaJqGridLink extends sfWidgetGridLink
 
     // options for render
     $this->addOption('icon', 'ui-icon-document');
-    $this->addOption('label', null);
 
     //    # icon class as: ui-icon-value
     //    icons:
@@ -76,14 +75,12 @@ class sfWidgetAlyssaJqGridLink extends sfWidgetGridLink
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url', 'Tag'));
-
     $name = $this->getOption('label') ? $this->getOption('label') : $name;
     // add styles for a link button in jquery
     $name = sprintf('<span class="ui-icon %s"></span>', $this->getOption('icon')).$name;
     $attributes['class'] = 'fg-button-mini fg-button ui-state-default fg-button-icon-left';
 
-    return link_to($name, $this->getUri(), $attributes);
+    return parent::render($name, $value, $attributes, $errors);
   }
 
   /**
