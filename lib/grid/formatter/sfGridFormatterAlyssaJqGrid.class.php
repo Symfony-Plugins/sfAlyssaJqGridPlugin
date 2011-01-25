@@ -88,6 +88,8 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
    */
   public function render()
   {
+    sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url', 'Tag'));
+
     $controller = sfContext::getInstance()->getController();
 
     $route = strtolower($this->grid->getName());
@@ -98,7 +100,8 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
 <div id="pager"></div>
 <script type="text/javascript">
 jQuery("#grid").jqGrid(%grid%);
-jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
+jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false}, {}, {}, {}, {multipleSearch:true});
+//jQuery("#grid").searchGrid( {multipleSearch:true} );
 jQuery(document).ready(function(){
     jQuery("#grid").setGridWidth(screen.width-300);
 });
