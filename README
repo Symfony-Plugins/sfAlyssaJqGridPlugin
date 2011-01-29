@@ -1,15 +1,146 @@
 = sfGridAlyssaPlugin plugin =
 
-The `sfGridAlyssaPlugin` plugin ...
+The `sfAlyssaJqGridPlugin` is a jqGrid implementation (jquery javascript grid, [main site](http://www.trirand.com/blog/ "jqGrid") ) that extends sfGridPlugin functionality. It's a easier manner of make a list from a given object, but without loose flexibility. 
+
+Thanks to the use of jqGrid, the final look of the list is equal to the obtained with [sfAdminThemejRollerPlugin](http://www.symfony-project.org/plugins/sfAdminThemejRollerPlugin) plugin. It's easy from here change the current look with JQueryUI Themeroller.
+
+Note: This plugin is based on the work of Leon van der Ree and your [sfGridJqFlexiPlugin](http://www.symfony-project.org/plugins/sfGridJqFlexiPlugin) plugin.
 
 
 
+## INSTALLATION ##
 
 
-== TODO ==
-    
-== Changelog ==
+1.In the plugins directory of your application, obtain from svn the required plug-ins
 
-=== 2010-05-03 | 0.5.0 ===
-* Creacion del plugin
-* Versionado del plugin y reacomodada estructura inicial.
+  [bash]
+  svn checkout http://svn.symfony-project.com/plugins/sfAlyssaDoctrineObjectPathPlugin/trunk sfAlyssaDoctrineObjectPathPlugin
+  svn checkout http://svn.symfony-project.com/plugins/sfDataSourcePlugin/trunk sfDataSourcePlugin
+  svn checkout http://svn.symfony-project.com/plugins/sfGridPlugin/branctrunk sfGridPlugin
+  svn checkout http://svn.symfony-project.com/plugins/sfAlyssaJqGridPlugin/trunk sfAlyssaJqGridPlugin
+
+Note: sfGridPlugin is from it current branch.
+
+2.Enable all the plug-ins in ProjectConfiguration.class.php file
+
+  [php]
+  public function setup()
+  {
+    $this->enablePlugins('sfAlyssaDoctrineObjectPathPlugin');
+    $this->enablePlugins('sfDoctrinePlugin');
+    $this->enablePlugins('sfDataSourcePlugin');
+    $this->enablePlugins('sfGridPlugin');
+    $this->enablePlugins('sfAlyssaJqGridPlugin');
+  }
+
+
+## EXAMPLE ##
+
+1.Begining with an schema definition like this
+
+  [yml]
+  People:
+    columns:
+      name:    { type: string(10) }
+      surname: { type: string (10) }
+      age:     { type: integer }
+ 
+2.We can now define a grid class to render the list of people, PeopleGrid.class.php
+
+  [php]
+  class PeopleGrid extends sfGridAlyssaJqGrid{
+
+    public function __construct()
+    {
+    $dataSource = new sfDataSourceDoctrine('Person');
+
+    parent::__construct($dataSource, array('name' => 'people', 'title' => 'List of peoples'));
+
+    $this->setColumns(array(
+      'name',
+      'surname',
+      'age',
+    ));
+
+    $this->setColumnTitles(array(
+      'age' => 'current age',
+    ));
+
+    $this->setRowActions(array(
+	"show" => new sfWidgetAlyssaJqGridLink(array(
+	    'action'  => '@route_to_show',
+	    'params'  => array('id'),
+	    'label'   => 'Show',
+	    'icon'    => 'ui-icon-mail-open')),
+	"delete" => new sfWidgetAlyssaJqGridLink(array(
+	    'action'  => '@route_to_delete',
+	    'params'  => array('id'),
+	    'label'   => 'Delete',
+	    'confirm' => 'Are you sure?',
+	    'icon'    => 'ui-icon-trash')),
+    ));
+
+    $this->setSortable(array('name', 'surname', 'age'));
+    $this->setDefaultSort('nombre', sfGrid::ASC);
+
+  }
+
+
+3.In the file routing.yml, you have to define an entry for the current ajax request in the form:
+
+  [yml]
+  grid_people:
+  class: sfGridAlyssaJqGridRoute
+  url: /people/grid
+  options: { model: PeopleGrid }
+  requirements:
+    sf_method: [get]
+
+Note: it's important that the name of the route begin with "grid_" and follow with the name 
+of the grid (defined in the PeopleGrid.class.php).
+
+
+4.Then you are ready to create a module that will use the previous PeopleGrid.class.php definition:
+
+  ./symfony generate:module people
+
+5.In the module "people", for example in index action, you have to create an instance of PeopleGrid:
+
+  [php]
+  public function executeIndex(sfWebRequest $request)
+  {
+    $this->grid  = new PeopleGrid();
+  }
+
+then in the IndexSuccess.php it's necesary to render the current grid:
+
+  [php]
+  <?php $grid = $sf_data->getRaw('grid');?>
+  <?php use_helper('Grid') ?>
+  <?php include_stylesheets_for_grid($grid) ?>
+  <?php include_javascripts_for_grid($grid) ?>
+
+  <div id="grid-example">
+   <table>
+    <?php echo $grid->renderJavaScript() ?>
+   </table>
+  </div>
+
+
+For more options and configurations, see de code ;)
+
+
+## TODO ##
+
+ * Explain in detail all the options avaiable. 
+
+
+## Changelog ##
+
+### 2011-29-01 | 0.6.0 ###
+* documentated installation and made an example
+* added more options to widgets
+* implemented filter feature
+
+### 2010-05-03 | 0.5.0 ###
+* Plug-in created
