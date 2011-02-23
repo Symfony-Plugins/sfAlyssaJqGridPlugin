@@ -101,17 +101,17 @@ class sfGridFormatterAlyssaJqGrid extends sfGridFormatterDynamic
 <script type="text/javascript">
 jQuery("#grid").jqGrid(%grid%);
 jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false}, {}, {}, {}, {multipleSearch:true});
-//jQuery("#grid").searchGrid( {multipleSearch:true} );
 jQuery(document).ready(function(){
-    jQuery("#grid").setGridWidth(screen.width-300);
+    jQuery("#grid").setGridWidth(screen.width - %margen_width%);
 });
 </script>
 EOF;
 
     $sortName  = $this->grid->getSortColumn() ? $this->grid->getSortColumn() : '';
     $sortOrder = $this->grid->getSortOrder() ? $this->grid->getSortOrder() : 'asc';
+    $margenWidth = $this->grid->getOption('jqgrid.margenWidth');
 
-    $grid = json_encode(array(
+    $gridi = json_encode(array(
               'url'         => $url,
               'datatype'    => 'json',
               'colNames'    => $this->getColumnNamesConfig(),
@@ -123,6 +123,7 @@ EOF;
               'viewrecords' => $this->grid->getOption('jqgrid.viewrecords'),
               'sortname'    => $sortName,
               'sortorder'   => $sortOrder,
+              'altRows'     => true,
               'forceFit'    => true,
               'sortable'    => $this->grid->getOption('jqgrid.sortable'),
               'height'      => $this->grid->getOption('jqgrid.height'),
@@ -131,7 +132,7 @@ EOF;
               'caption'     => $this->grid->getTitle(),
     ));
 
-    return strtr($javascript, array('%grid%' => $grid));
+    return strtr($javascript, array('%grid%' => $gridi, '%margen_width%' => $margenWidth));
 
   }
 

@@ -47,7 +47,7 @@ class sfGridAlyssaJqGrid extends sfContextGridJavaScript
    *                            - jqgrid.height
    *                            - jqgrid.rowList
    *                            - jqgrid.viewrecords
-   *                            -
+   *                            - jqgrid.margenWidth: al ancho de pantalla se le resta esta cantidad (barra menu, 240 x defecto)
    *
    * See an explanation in http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
    */
@@ -63,6 +63,7 @@ class sfGridAlyssaJqGrid extends sfContextGridJavaScript
     $this->addOption('jqgrid.autoWidth', false);
     $this->addOption('jqgrid.height', 'auto');
     $this->addOption('jqgrid.rowList', array(10,20,30,50));
+    $this->addOption('jqgrid.margenWidth', 245);
 
     // define the javascript formatter
     $this->setJavaScriptFormatter(new sfGridFormatterAlyssaJqGrid($this));
