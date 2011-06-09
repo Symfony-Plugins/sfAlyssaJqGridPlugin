@@ -92,7 +92,7 @@ class sfGridAlyssaJqGridRoute extends sfGridRoute
           $comparison = $this->convertOperator($rule['op']);
           $value      = $this->convertData($rule['data'], $rule['op']);
 
-          $search['fields'][$rule['field']] = array(
+          $search['fields'][$rule['field']][] = array(
             'comparison' => $comparison,
             'value'      => $value,
           );
